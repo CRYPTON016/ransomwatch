@@ -1,0 +1,95 @@
+# RansomWatch Configuration
+# =========================
+#
+# 100% LOCAL - NO TELEMETRY - NO PHONE HOME
+#
+# This tool only sends alerts to endpoints YOU configure below.
+# No data is ever sent to any third party.
+
+# Paths to monitor for ransomware activity
+[watch]
+paths = [
+    "/home",
+    "/data",
+    # "/var/www",
+    # "/opt/myapp",
+]
+
+# Paths to exclude from monitoring
+exclude = [
+    "/home/*/.cache",
+    "/home/*/.local/share/Trash",
+    "*.tmp",
+    "*.swp",
+    "*.log",
+]
+
+# Watch subdirectories recursively
+recursive = true
+
+
+# Detection thresholds
+[thresholds]
+# Entropy threshold (0-8). Files with entropy above this are flagged.
+# Normal files: ~4-6, Compressed: ~7.0, Encrypted: ~7.5-8.0
+entropy_high = 7.5
+
+# Number of file operations to trigger mass operation alert
+mass_operation_count = 50
+
+# Time window (seconds) for mass operation detection
+mass_operation_window_secs = 10
+
+# Minimum file size to check entropy (skip tiny files)
+min_file_size_bytes = 1024  # 1KB
+
+# Maximum file size to check entropy (skip huge files for performance)
+max_file_size_bytes = 10485760  # 10MB
+
+# Sample size for entropy calculation
+entropy_sample_size = 65536  # 64KB
+
+
+# Alert configuration
+[alerts]
+# Enable desktop notifications
+desktop = true
+
+# Log alerts to file (JSON format for parsing)
+# log_file = "/var/log/ransomwatch/alerts.log"
+
+
+# Webhook configuration (optional)
+# Only sends to YOUR configured endpoint - no external telemetry
+#
+# Supports:
+#   - Slack: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+#   - Discord: https://discord.com/api/webhooks/YOUR/WEBHOOK
+#   - Custom: Any endpoint that accepts JSON POST
+#
+# [alerts.webhook]
+# url = "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+# auth_header = "Bearer your-token"  # Optional
+# retry_count = 3
+
+
+# Email configuration (optional)
+# Only sends to YOUR configured email - no external telemetry
+#
+# [alerts.email]
+# smtp_server = "smtp.gmail.com"
+# smtp_port = 587
+# username = "your-email@gmail.com"
+# password = "your-app-password"  # Use app password, not real password
+# from = "ransomwatch@yourdomain.com"
+# to = "alerts@yourdomain.com"
+# use_tls = true
+
+
+# Logging configuration
+[logging]
+# Log level: trace, debug, info, warn, error
+level = "info"
+
+# Log to file (optional)
+# file = "/var/log/ransomwatch/ransomwatch.log"

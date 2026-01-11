@@ -1,0 +1,73 @@
+[package]
+name = "ransomwatch"
+version = "0.1.0"
+edition = "2021"
+description = "Lightweight ransomware activity monitor - alerts you before it's too late"
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["security", "ransomware", "monitoring", "detection"]
+categories = ["command-line-utilities", "filesystem"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# File watching (cross-platform, uses inotify on Linux)
+notify = { version = "6", features = ["serde"] }
+
+# Desktop notifications
+notify-rust = "4"
+
+# Configuration
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# HTTP client for webhooks (optional, no telemetry - only sends to USER-configured endpoints)
+reqwest = { version = "0.12", features = ["json"], default-features = false, optional = true }
+
+# Email (optional)
+lettre = { version = "0.11", default-features = false, features = ["smtp-transport", "tokio1-native-tls", "builder"], optional = true }
+
+# Process monitoring
+sysinfo = "0.30"
+
+# Glob patterns for path matching
+glob = "0.3"
+
+# Directory walking
+walkdir = "2"
+
+# Async channels
+async-channel = "2"
+
+# Web dashboard
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors"] }
+
+# fanotify for Linux (permission-based monitoring)
+[target.'cfg(target_os = "linux")'.dependencies]
+nix = { version = "0.28", features = ["fanotify", "poll"] }
+libc = "0.2"
+
+[features]
+default = ["webhook", "email"]
+webhook = ["reqwest"]
+email = ["lettre"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
